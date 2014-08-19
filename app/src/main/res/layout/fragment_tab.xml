@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="njuke.njuke_host.TabFragment">
+    tools:context="njuke.njuke_host.TabHostFragment">
 
     <TabHost
         android:layout_width="fill_parent"
@@ -30,12 +30,11 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Large Text"
-                        android:id="@+id/textView2" />
+                    <fragment android:name="njuke.njuke_host.OverviewTabFragment"
+                        android:id="@+id/overviewtabfragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="fill_parent"
+                        tools:layout="@layout/fragment_overview_tab" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -44,12 +43,11 @@
                     android:layout_height="fill_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceMedium"
-                        android:text="Medium Text"
-                        android:id="@+id/textView3" />
+                    <fragment android:name="njuke.njuke_host.PlaylistTabFragment"
+                        android:id="@+id/playlisttabfragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:layout="@layout/fragment_playlist_tab" />
                 </LinearLayout>
 
                 <LinearLayout
