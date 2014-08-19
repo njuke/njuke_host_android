@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.TabHost;
 
 
@@ -15,25 +16,8 @@ public class main extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TabHost tabs=(TabHost)findViewById(R.id.tabhost);
-        tabs.setup();
 
-        TabHost.TabSpec spec = tabs.newTabSpec("overview");
-        spec.setContent(R.id.overview);
-        spec.setIndicator(getString(R.string.overviewTabName));
-        tabs.addTab(spec);
-
-        spec=tabs.newTabSpec("playlist");
-        spec.setContent(R.id.playlist);
-        spec.setIndicator(getString(R.string.playlistTabName));
-        tabs.addTab(spec);
-
-        spec=tabs.newTabSpec("voters");
-        spec.setContent(R.id.voters);
-        spec.setIndicator(getString(R.string.votersTabName));
-        tabs.addTab(spec);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
