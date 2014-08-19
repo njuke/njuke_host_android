@@ -15,7 +15,7 @@ public class TabFragment extends Fragment
         implements View.OnTouchListener, TabHost.OnTabChangeListener {
 
     private TabHost tabHost;
-    private static final int ANIMATION_TIME = 250;
+    private static final int ANIMATION_TIME = 350;
     private View previousView;
     private View currentView;
     private int prevTab;
