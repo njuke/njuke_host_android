@@ -10,10 +10,12 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import njuke.njuke_host.R;
@@ -29,6 +31,7 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
     private Song currentSong;
     private TextView artistTextView;
     private TextView titleTextView;
+    private SeekBar musicSeeker;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
@@ -61,7 +64,16 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         artistTextView.setText(song.getArtist());
         playerService.playSong(song);
         currentSong = song;
+        updateSeeker();
+    }
 
+    public void togglePlay(){
+        if(playerService.isPlaying()){
+            playerService.pauseSong();
+        }else{
+            updateSeeker();
+            playerService.resumeSong();
+        }
     }
 
     @Override
@@ -69,11 +81,36 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music_player, container, false);
         ((Button) view.findViewById(R.id.nextBtn)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.playToggleBtn)).setOnClickListener(this);
         titleTextView = (TextView) view.findViewById(R.id.songTitle);
         artistTextView = (TextView) view.findViewById(R.id.songArtist);
+        musicSeeker = (SeekBar) view.findViewById(R.id.seekBar);
+
         return view;
     }
 
+    private boolean running = false;
+    private void updateSeeker(){
+        if(!running){
+            musicSeeker.postDelayed(seekerUpdater,100);
+        }
+    }
+    private Runnable seekerUpdater = new Runnable() {
+        public void run() {
+            if(playerService.isPlaying()){
+                running = true;
+                Double progress = (double) 0;
+                long currentSeconds = (int) (playerService.getCurrentPosition() / 1000);
+                long totalSeconds = (int) (playerService.getDuration() / 1000);
+                progress =(((double)currentSeconds)/totalSeconds)*100;
+                Log.d("Progress","Current: "+playerService.getCurrentPosition()+" Duration: "+playerService.getDuration() + " Max: "+musicSeeker.getMax()+ " Progress: "+progress);
+                musicSeeker.setProgress(progress.intValue());
+                musicSeeker.postDelayed(this, 100);
+            }else{
+                running = false;
+            }
+        }
+    };
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
@@ -90,6 +127,9 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         switch (view.getId()) {
             case R.id.nextBtn:
                 nextSong();
+                break;
+            case R.id.playToggleBtn:
+                togglePlay();
                 break;
         }
     }

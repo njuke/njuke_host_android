@@ -4,6 +4,7 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
+import android.provider.MediaStore;
 import android.support.v4.app.ListFragment;
 import android.content.Context;
 import android.net.Uri;
@@ -57,12 +58,19 @@ public class PlaylistTabFragment extends ListFragment {
                     (android.provider.MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.ARTIST);
+            int durationColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.DURATION);
+            int isMusic = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.IS_MUSIC);
             //add songs to list
             do {
-                long id = musicCursor.getLong(idColumn);
-                String title = musicCursor.getString(titleColumn);
-                String artist = musicCursor.getString(artistColumn);
-                songs.add(new Song(title,artist,id,0));
+                if(musicCursor.getInt(isMusic) == 1){
+                    long id = musicCursor.getLong(idColumn);
+                    long duration = musicCursor.getInt(durationColumn);
+                    String title = musicCursor.getString(titleColumn);
+                    String artist = musicCursor.getString(artistColumn);
+                    songs.add(new Song(title,artist,duration,id,0));
+                }
             }
             while (musicCursor.moveToNext());
         }

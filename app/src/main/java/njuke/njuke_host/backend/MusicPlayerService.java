@@ -28,6 +28,14 @@ public class MusicPlayerService extends Service implements
         initMediaPlayer();
     }
 
+    public long getCurrentPosition(){
+        return player.getCurrentPosition();
+    }
+
+    public long getDuration(){
+        return player.getDuration();
+    }
+
     public boolean playSong(Song song){
         player.reset();
         Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
@@ -53,12 +61,17 @@ public class MusicPlayerService extends Service implements
         }
     }
 
+    public boolean isPlaying(){
+        return player.isPlaying();
+    }
+
     private void initMediaPlayer(){
         player.setWakeMode(getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         player.setOnPreparedListener(this);
         player.setOnCompletionListener(this);
         player.setOnErrorListener(this);
+        player.setLooping(false);
     }
 
     public class MusicBinder extends Binder {
