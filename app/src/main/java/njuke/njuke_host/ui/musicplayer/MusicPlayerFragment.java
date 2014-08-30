@@ -59,6 +59,7 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         Song song = queries.requestNextSong();
         titleTextView.setText(song.getTitle());
         artistTextView.setText(song.getArtist());
+        playerService.playSong(song);
         currentSong = song;
 
     }

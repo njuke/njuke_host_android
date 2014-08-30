@@ -1,12 +1,16 @@
 package njuke.njuke_host.backend;
 
 import android.app.Service;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.MediaStore;
+import android.util.Log;
 
 public class MusicPlayerService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
@@ -22,6 +26,31 @@ public class MusicPlayerService extends Service implements
         super.onCreate();
         player = new MediaPlayer();
         initMediaPlayer();
+    }
+
+    public boolean playSong(Song song){
+        player.reset();
+        Uri trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,song.getId());
+        try{
+            player.setDataSource(getApplicationContext(),trackUri);
+        }catch (Exception e){
+            Log.e("MUSIC PLAYER SERVICE", "Error setting data source", e);
+            return false;
+        }
+        player.prepareAsync();
+        return true;
+    }
+
+    public void pauseSong(){
+        if(player.isPlaying()){
+            player.pause();
+        }
+    }
+
+    public void resumeSong(){
+        if(!player.isPlaying()){
+            player.start();
+        }
     }
 
     private void initMediaPlayer(){
@@ -62,6 +91,6 @@ public class MusicPlayerService extends Service implements
 
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
-
+        mediaPlayer.start();
     }
 }

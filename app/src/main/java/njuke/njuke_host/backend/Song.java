@@ -9,12 +9,14 @@ public class Song implements Comparable<Song> {
     private int voteCount;
     private boolean isVoted;
     private long timeStamp;
+    private long id;
 
-    public Song(String title, String artist, int voteCount) {
+    public Song(String title, String artist,long id, int voteCount) {
         this.title = title;
         this.artist = artist;
         this.isVoted = false;
         this.voteCount = voteCount;
+        this.id = id;
         timeStamp = System.currentTimeMillis();
     }
 
@@ -22,6 +24,7 @@ public class Song implements Comparable<Song> {
     public String getTitle(){ return title; }
     public String getArtist(){ return artist; }
     public int getVoteCount(){ return voteCount; }
+    public long getId(){ return id; }
 
     public void toggleVoted() {
         isVoted = !isVoted;
@@ -54,4 +57,5 @@ public class Song implements Comparable<Song> {
         voteCount = 0;
 
     }
+
 }

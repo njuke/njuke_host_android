@@ -2,6 +2,8 @@ package njuke.njuke_host.ui.playlist;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.ContentResolver;
+import android.database.Cursor;
 import android.support.v4.app.ListFragment;
 import android.content.Context;
 import android.net.Uri;
@@ -25,21 +27,44 @@ import njuke.njuke_host.R;
 import njuke.njuke_host.backend.Song;
 
 public class PlaylistTabFragment extends ListFragment {
-    private String[] songNames = new String[]{"Never Gonna Give You Up1", "Never Gonna Give You Up2",
+    /*private String[] songNames = new String[]{"Never Gonna Give You Up1", "Never Gonna Give You Up2",
             "Never Gonna Give You Up3", "Never Gonna Give You Up4",
             "Never Gonna Give You Up5", "Never Gonna Give You Up6",
             "Never Gonna Give You Up7", "Never Gonna Give You Up8",
             "Never Gonna Give You Up9", "Never Gonna Give You Up10",};
-    private String artistName = "Rick Astley";
+    private String artistName = "Rick Astley";*/
     private SongAdapter adapter;
     private int mAnimationDuration;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_playlist_tab, container, false);
         mAnimationDuration = getResources().getInteger(android.R.integer.config_shortAnimTime) + 100;
 
-        ArrayList<Song> songs = new ArrayList<Song>(songNames.length);
+        ArrayList<Song> songs = new ArrayList<Song>();
+        /*long idCounter = 0; //TODO real song id's!
         for (String song : songNames) {
-            songs.add(new Song(song, artistName, 1));
+            songs.add(new Song(song, artistName,idCounter++, 1));
+        }*/
+
+        ContentResolver musicResolver = view.getContext().getContentResolver();
+        Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, null);
+        if(musicCursor!=null && musicCursor.moveToFirst()){
+            //get columns
+            int titleColumn = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media.TITLE);
+            int idColumn = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media._ID);
+            int artistColumn = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media.ARTIST);
+            //add songs to list
+            do {
+                long id = musicCursor.getLong(idColumn);
+                String title = musicCursor.getString(titleColumn);
+                String artist = musicCursor.getString(artistColumn);
+                songs.add(new Song(title,artist,id,0));
+            }
+            while (musicCursor.moveToNext());
         }
 
         adapter = new SongAdapter(getActivity().getApplicationContext(), songs);
@@ -51,7 +76,7 @@ public class PlaylistTabFragment extends ListFragment {
             }
         });
         setListAdapter(adapter);
-        return inflater.inflate(R.layout.fragment_playlist_tab, container, false);
+        return view;
     }
 
     public Song getNextSong() {
