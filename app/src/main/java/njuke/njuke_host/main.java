@@ -12,52 +12,43 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.HashMap;
 import java.util.Locale;
 
+import njuke.njuke_host.backend.Song;
+import njuke.njuke_host.ui.OverviewTabFragment;
+import njuke.njuke_host.ui.musicplayer.MusicPlayerFragment.MusicQueries;
+import njuke.njuke_host.ui.playlist.PlaylistTabFragment;
 
-public class main extends FragmentActivity implements ActionBar.TabListener {
+
+public class main extends FragmentActivity implements ActionBar.TabListener, MusicQueries {
     /* Debug tag. */
     public static final String TAG = main.class.getSimpleName();
+    private PlaylistTabFragment playList;
 
-    SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
-    ViewPager mViewPager;
+    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up the action bar.
         final ActionBar actionBar = getActionBar();
         if (actionBar == null) {
             Log.e(TAG, "Failed to get ActionBar. Bailing!");
             return;
         }
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        // When swiping between different sections, select the corresponding
-        // tab. We can also use ActionBar.Tab#select() to do this if we have
-        // a reference to the Tab.
         mViewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 actionBar.setSelectedNavigationItem(position);
             }
         });
-
-        // For each of the sections in the app, add a tab to the action bar.
         for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
             actionBar.addTab(actionBar.newTab()
                     .setText(mSectionsPagerAdapter.getPageTitle(i))
@@ -68,16 +59,12 @@ public class main extends FragmentActivity implements ActionBar.TabListener {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -87,8 +74,6 @@ public class main extends FragmentActivity implements ActionBar.TabListener {
 
     @Override
     public void onTabSelected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
-        // When the given tab is selected, switch to the corresponding page in
-        // the ViewPager.
         mViewPager.setCurrentItem(tab.getPosition());
     }
 
@@ -100,13 +85,19 @@ public class main extends FragmentActivity implements ActionBar.TabListener {
     public void onTabReselected(ActionBar.Tab tab, FragmentTransaction fragmentTransaction) {
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
-    public class SectionsPagerAdapter extends FragmentPagerAdapter {
-        private static final int NUM_PAGES = 3;
+    @Override
+    public Song requestNextSong() {
+        if(playList == null){
+            playList = (PlaylistTabFragment)(mSectionsPagerAdapter.getItem(SectionsPagerAdapter.PLAYLIST));
+        }
+        return playList.getNextSong();
+    }
 
+    public class SectionsPagerAdapter extends FragmentPagerAdapter {
+        public static final int OVERVIEW = 0;
+        public static final int PLAYLIST = 1;
+        private static final int NUM_PAGES = 3;
+        private Fragment[] fragments = new Fragment[3];
         public SectionsPagerAdapter(FragmentManager fm) {
             super(fm);
         }
@@ -114,15 +105,28 @@ public class main extends FragmentActivity implements ActionBar.TabListener {
         @Override
         public Fragment getItem(int position) {
             // FIXME: This could probably be done cleaner.
+            if(position < 0 || position > NUM_PAGES - 1){
+                throw new IllegalArgumentException("Tried to access a non existing fragment.");
+            }
+            Fragment fragment = fragments[position];
+            if(fragment != null){
+                return fragment;
+            }
+
             switch (position) {
                 case 0:
-                    return new OverviewTabFragment();
+                    fragment = new OverviewTabFragment();
+                    break;
                 case 1:
-                    return new PlaylistTabFragment();
+                    fragment = new PlaylistTabFragment();
+                    break;
                 default:
                     // TODO: Add last fragment.
-                    return new PlaylistTabFragment();
+                    fragment = new PlaylistTabFragment();
+                    break;
             }
+            fragments[position] = fragment;
+            return fragment;
         }
 
         @Override

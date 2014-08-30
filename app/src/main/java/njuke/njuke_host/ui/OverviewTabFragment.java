@@ -1,4 +1,4 @@
-package njuke.njuke_host;
+package njuke.njuke_host.ui;
 
 
 
@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import njuke.njuke_host.R;
 
 public class OverviewTabFragment extends Fragment {
 

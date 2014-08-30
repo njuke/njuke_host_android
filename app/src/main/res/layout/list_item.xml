@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--android:background="?android:attr/selectableItemBackground"-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:orientation="horizontal"
+    android:background="#fffefe">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/list_item_song_title"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/artist"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@id/title"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/list_item_artist" />
+
+    <njuke.njuke_host.ui.playlist.VoteButton
+        android:id="@+id/voteup"
+        android:background="@drawable/vote_button"
+        app:clickedBackground="@drawable/vote_button_clicked"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_height="30dp"
+        android:layout_width="wrap_content"
+        android:text="@string/initial_vote_button_text"
+        android:textSize="14sp" />
+</RelativeLayout>
