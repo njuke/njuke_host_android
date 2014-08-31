@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/editText"
         android:enabled="true"
-        android:editable="true"
+        android:editable="false"
         android:hint="Enter event name."
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

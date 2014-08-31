@@ -17,7 +17,8 @@ import java.util.Locale;
 
 import njuke.njuke_host.backend.Song;
 import njuke.njuke_host.ui.OverviewTabFragment;
-import njuke.njuke_host.ui.musicplayer.MusicPlayerFragment.MusicQueries;
+import njuke.njuke_host.ui.VotersFragment;
+import njuke.njuke_host.ui.musicplayer.MusicQueries;
 import njuke.njuke_host.ui.playlist.PlaylistTabFragment;
 
 
@@ -119,6 +120,9 @@ public class main extends FragmentActivity implements ActionBar.TabListener, Mus
                     break;
                 case 1:
                     fragment = new PlaylistTabFragment();
+                    break;
+                case 2:
+                    fragment = new VotersFragment();
                     break;
                 default:
                     // TODO: Add last fragment.

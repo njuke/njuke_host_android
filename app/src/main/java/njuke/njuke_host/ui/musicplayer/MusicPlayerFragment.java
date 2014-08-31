@@ -22,12 +22,12 @@ import njuke.njuke_host.R;
 import njuke.njuke_host.backend.MusicPlayerService;
 import njuke.njuke_host.backend.Song;
 
-public class MusicPlayerFragment extends Fragment implements View.OnClickListener{
+public class MusicPlayerFragment extends Fragment implements View.OnClickListener, MusicQueries {
 
     private MusicPlayerService playerService;
     private Intent playIntent;
     private boolean bound = false;
-    private MusicQueries queries;
+    private MusicQueries queries,passer;
     private Song currentSong;
     private TextView artistTextView;
     private TextView titleTextView;
@@ -37,6 +37,7 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             MusicPlayerService.MusicBinder binder = (MusicPlayerService.MusicBinder) iBinder;
             playerService = binder.getService();
+            playerService.initiate(passer);
             bound = true;
         }
 
@@ -49,22 +50,23 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
     @Override
     public void onStart(){
         super.onStart();
+        passer = this;
+        updateSeeker();
         if(playIntent == null){
             Activity parent = getActivity();
             playIntent = new Intent(parent,MusicPlayerService.class);
             parent.bindService(playIntent,serviceConnection, Context.BIND_AUTO_CREATE);
             parent.startService(playIntent);
-
         }
     }
 
-    public void nextSong() {
+    public Song nextSong() {
         Song song = queries.requestNextSong();
         titleTextView.setText(song.getTitle());
         artistTextView.setText(song.getArtist());
-        playerService.playSong(song);
         currentSong = song;
         updateSeeker();
+        return song;
     }
 
     public void togglePlay(){
@@ -76,15 +78,23 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         }
     }
 
+
+    private void stopPlay() {
+        musicSeeker.setProgress(0);
+        playerService.stop();
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music_player, container, false);
         ((Button) view.findViewById(R.id.nextBtn)).setOnClickListener(this);
         ((Button) view.findViewById(R.id.playToggleBtn)).setOnClickListener(this);
+        ((Button) view.findViewById(R.id.stopBtn)).setOnClickListener(this);
         titleTextView = (TextView) view.findViewById(R.id.songTitle);
         artistTextView = (TextView) view.findViewById(R.id.songArtist);
         musicSeeker = (SeekBar) view.findViewById(R.id.seekBar);
+        musicSeeker.setEnabled(false);
 
         return view;
     }
@@ -126,15 +136,20 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.nextBtn:
-                nextSong();
+                Song song = nextSong();
+                playerService.playSong(song);
                 break;
             case R.id.playToggleBtn:
                 togglePlay();
                 break;
+            case R.id.stopBtn:
+                stopPlay();
+                break;
         }
     }
 
-    public interface MusicQueries{
-        public Song requestNextSong();
+    @Override
+    public Song requestNextSong() {
+        return nextSong();
     }
 }
