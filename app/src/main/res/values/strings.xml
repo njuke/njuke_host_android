@@ -4,9 +4,9 @@
     <string name="app_name">Njuke_host</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-    <string name="prevSongString"><![CDATA[<<]]></string>
-    <string name="playpauseString">► / ll</string>
-    <string name="nextSongString"><![CDATA[>>]]></string>
+    <string name="playString">►</string>
+    <string name="pauseString">▌▌</string>
+    <string name="nextSongString">►►</string>
     <string name="overviewTabName">OVERVIEW</string>
     <string name="playlistTabName">PLAYLIST</string>
     <string name="votersTabName">VOTERS</string>

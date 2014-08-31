@@ -10,12 +10,14 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/playpauseString"
+        android:text="@string/playString"
+        android:textSize="20sp"
         android:id="@+id/playToggleBtn"
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textStyle="bold"/>
 
     <Button
         style="?android:attr/buttonStyleSmall"
@@ -26,7 +28,9 @@
         android:layout_gravity="bottom"
         android:layout_toStartOf="@+id/playToggleBtn"
         android:layout_alignParentBottom="true"
-        android:layout_toLeftOf="@+id/playToggleBtn" />
+        android:layout_toLeftOf="@+id/playToggleBtn"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -54,9 +58,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/seekBar"
-        android:layout_gravity="bottom"
         android:layout_toStartOf="@+id/nextBtn"
-        android:layout_alignParentBottom="true"
+        android:layout_alignTop="@+id/nextBtn"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/stopBtn"
         android:layout_toEndOf="@+id/stopBtn"
         android:layout_toLeftOf="@+id/nextBtn" />
@@ -70,7 +74,9 @@
         android:layout_gravity="bottom"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
 </RelativeLayout>
 

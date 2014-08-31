@@ -31,6 +31,7 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
     private Song currentSong;
     private TextView artistTextView;
     private TextView titleTextView;
+    private Button playToggleBtn;
     private SeekBar musicSeeker;
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
@@ -66,14 +67,17 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         artistTextView.setText(song.getArtist());
         currentSong = song;
         updateSeeker();
+        updatePlayToggleBtnText(true);
         return song;
     }
 
     public void togglePlay(){
         if(playerService.isPlaying()){
+            updatePlayToggleBtnText(false);
             playerService.pauseSong();
         }else{
             updateSeeker();
+            updatePlayToggleBtnText(true);
             playerService.resumeSong();
         }
     }
@@ -82,6 +86,7 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
     private void stopPlay() {
         musicSeeker.setProgress(0);
         playerService.stop();
+        updatePlayToggleBtnText(false);
     }
 
     @Override
@@ -89,7 +94,9 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_music_player, container, false);
         ((Button) view.findViewById(R.id.nextBtn)).setOnClickListener(this);
-        ((Button) view.findViewById(R.id.playToggleBtn)).setOnClickListener(this);
+        playToggleBtn = (Button) view.findViewById(R.id.playToggleBtn);
+        playToggleBtn.setOnClickListener(this);
+        updatePlayToggleBtnText(playerService != null && playerService.isPlaying());
         ((Button) view.findViewById(R.id.stopBtn)).setOnClickListener(this);
         titleTextView = (TextView) view.findViewById(R.id.songTitle);
         artistTextView = (TextView) view.findViewById(R.id.songArtist);
@@ -97,6 +104,16 @@ public class MusicPlayerFragment extends Fragment implements View.OnClickListene
         musicSeeker.setEnabled(false);
 
         return view;
+    }
+
+    private void updatePlayToggleBtnText(boolean isPlaying) {
+        if(isPlaying){
+            playToggleBtn.setText(getString(R.string.pauseString));
+            playToggleBtn.setTextSize(10);
+        }else{
+            playToggleBtn.setText(getString(R.string.playString));
+            playToggleBtn.setTextSize(20);
+        }
     }
 
     private boolean running = false;
